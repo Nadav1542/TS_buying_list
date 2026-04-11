@@ -1,0 +1,43 @@
+// Imports
+import { type ShoppingItem as ShoppingItemType } from '../types/shopping.types'; 
+import ShoppingItem from './ShoppingItem'; 
+
+// Component props
+interface ShoppingListProps {
+  items: ShoppingItemType[];
+  onToggleBought: (id: string) => void; // Toggle bought status
+  onDelete: (id: string) => void; // Delete product
+  onPriorityChange?: (id: string, newPriority: ShoppingItemType['priority']) => void; // Change priority
+  onEdit: (item: ShoppingItemType) => void;
+  ariaLabel: string;
+  emptyMessage: string;
+  showPriority?: boolean;
+}
+
+// Component declaration
+const ShoppingList = ({ items, onToggleBought, onDelete, onPriorityChange, onEdit, ariaLabel, emptyMessage, showPriority = true }: ShoppingListProps) => {
+  // Render
+  return (
+    <section className="shopping-list" aria-label={ariaLabel}>
+      {items.length === 0 ? (
+        <p className="empty-state">{emptyMessage}</p>
+      ) : (
+        items.map(item => (
+          <ShoppingItem 
+            key={item._id} 
+            item={item} 
+            onToggleBought={onToggleBought} 
+            onDelete={onDelete} 
+            onPriorityChange={onPriorityChange}
+            onEdit={onEdit}
+            showPriority={showPriority}
+          />
+        ))
+      )}
+    </section>
+  );
+};
+
+// Export
+export default ShoppingList;
+

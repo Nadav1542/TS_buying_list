@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Rubik, Assistant, "Segoe UI", sans-serif;
+  min-height: 100vh;
+  line-height: 1.35;
+}

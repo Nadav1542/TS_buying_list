@@ -6,7 +6,7 @@ import { globalErrorHandler } from './middleware/errorHandler.js';
 
 // Initialize the Express application
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 // Middleware to parse incoming JSON requests (crucial for POST/PUT requests)
 app.use(cors());

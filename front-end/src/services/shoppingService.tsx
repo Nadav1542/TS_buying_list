@@ -1,6 +1,6 @@
 import { type ShoppingItem } from '../types/shopping.types';
 
-export const API_URL = 'http://localhost:3000/api/products';
+export const API_URL = 'http://localhost:3001/api/products';
 
 type ApiResponse<T> = {
   success: boolean;

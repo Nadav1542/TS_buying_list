@@ -19,6 +19,7 @@ router.post('/', validate(createProductsSchema), createProducts);
 router.get('/', getAllProducts);
 
 router.delete('/:id', deleteProductById);
+
 router.patch('/:id', validate(updateProductSchema), toggleBought);
 
 export default router;

@@ -29,7 +29,6 @@ export const createProducts = catchAsync(async (req: Request, res: Response) => 
  
 });
 
-
 export const getAllProducts = catchAsync(async (req: Request, res: Response) => {
   
     const products = await Product.find();
@@ -41,7 +40,6 @@ export const getAllProducts = catchAsync(async (req: Request, res: Response) => 
     return res.status(200).json({ success: true, data: products });
   
 });
-
 
 export const deleteProductById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -62,7 +60,6 @@ export const deleteProductById = catchAsync(async (req: Request, res: Response) 
     message: 'Product deleted successfully'
   });
 });
-
 
 export const toggleBought = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

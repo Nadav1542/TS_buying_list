@@ -3,9 +3,10 @@ import {
   createProducts,
   deleteProductById,
   getAllProducts,
-  toggleBought
+  updateProductById
 } from '../controllers/product.controller.js';
 import { validate } from '../middleware/validate.js';
+import { requireListToken } from '../middleware/requireListToken.js';
 import {
   createProductsSchema,
   updateProductSchema
@@ -14,12 +15,12 @@ import {
 
 const router = Router();
 
-router.post('/', validate(createProductsSchema), createProducts);
+router.post('/', requireListToken, validate(createProductsSchema), createProducts);
 
-router.get('/', getAllProducts);
+router.get('/', requireListToken, getAllProducts);
 
-router.delete('/:id', deleteProductById);
+router.delete('/:id', requireListToken, deleteProductById);
 
-router.patch('/:id', validate(updateProductSchema), toggleBought);
+router.patch('/:id', requireListToken, validate(updateProductSchema), updateProductById);
 
 export default router;

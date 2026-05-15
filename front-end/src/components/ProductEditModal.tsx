@@ -3,7 +3,6 @@ import { type ShoppingItem as ShoppingItemType } from '../types/shopping.types';
 
 interface EditPayload {
   name: string;
-  description: string;
 }
 
 interface ProductEditModalProps {
@@ -16,19 +15,16 @@ interface ProductEditModalProps {
 
 const ProductEditModal = ({ isOpen, isSaving, item, onClose, onSave }: ProductEditModalProps) => {
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (!item) {
       setName('');
-      setDescription('');
       setError('');
       return;
     }
 
     setName(item.name);
-    setDescription(item.description ?? '');
     setError('');
   }, [item]);
 
@@ -40,8 +36,6 @@ const ProductEditModal = ({ isOpen, isSaving, item, onClose, onSave }: ProductEd
     event.preventDefault();
 
     const trimmedName = name.trim();
-    const trimmedDescription = description.trim();
-
     if (trimmedName.length < 3) {
       setError('שם המוצר חייב להכיל לפחות 3 תווים.');
       return;
@@ -49,8 +43,7 @@ const ProductEditModal = ({ isOpen, isSaving, item, onClose, onSave }: ProductEd
 
     setError('');
     await onSave({
-      name: trimmedName,
-      description: trimmedDescription
+      name: trimmedName
     });
   };
 
@@ -80,16 +73,6 @@ const ProductEditModal = ({ isOpen, isSaving, item, onClose, onSave }: ProductEd
               onChange={(event) => setName(event.target.value)}
               maxLength={80}
               autoFocus
-            />
-          </label>
-
-          <label className="field-wrap">
-            <span>תיאור</span>
-            <textarea
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              rows={4}
-              maxLength={400}
             />
           </label>
 

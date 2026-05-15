@@ -2,7 +2,7 @@ import ShoppingList from "../components/ShoppingList";
 import ProductEditModal from "../components/ProductEditModal";
 import ProductsAddingModal from "../components/ProductsAddingModal";
 import {useEffect, useState} from "react";
-import {addProducts, getShoppingList, updateProduct, deleteProduct, type CreateProductsDTO} from "../services/shoppingService";
+import {addProducts, getShoppingList, updateProduct, deleteProduct, type CreateProductsDTO, getListToken} from "../services/shoppingService";
 import {type ShoppingItem} from "../types/shopping.types";
 
 const ShoppingListPage = () => {
@@ -15,11 +15,17 @@ const ShoppingListPage = () => {
   const [isSavingEdit, setIsSavingEdit] = useState(false);
   const [isAddingOpen, setIsAddingOpen] = useState(false);
   const [isSavingAdd, setIsSavingAdd] = useState(false);
+  const [shareLink, setShareLink] = useState('');
 
   useEffect(() => {
-    
     fetchShoppingList();
   }, []);
+
+  useEffect(() => {
+    const token = getListToken();
+    if (!token) return;
+    setShareLink(`${window.location.origin}/share/${token}`);
+  }, [items.length]);
 
   
   const fetchShoppingList = async () => {
@@ -92,30 +98,6 @@ const ShoppingListPage = () => {
     }
   };
 
-  const handlePriorityChange = async (id: string, newPriority: ShoppingItem['priority']) => {
-    
-    const itemToUpdate = items.find(item => item._id === id);
-    if (!itemToUpdate) return;
-
-    const oldPriorityStatus = itemToUpdate.priority;
-    
-    setItems(prevItems => 
-      prevItems.map(item => 
-        item._id === id ? { ...item, priority: newPriority } : item
-      )
-    );
-
-    try {
-      await updateProduct(id, { priority: newPriority });
-    } catch (error) {
-      console.error("Error updating priority:", error);
-      setItems(prevItems => 
-        prevItems.map(item => 
-          item._id === id ? { ...item, priority: oldPriorityStatus } : item
-        )
-      );
-    }
-  };  
 
   const handleOpenEdit = (item: ShoppingItem) => {
     setEditingItem(item);
@@ -125,15 +107,14 @@ const ShoppingListPage = () => {
     setEditingItem(null);
   };
 
-  const handleSaveEdit = async (payload: { name: string; description: string }) => {
+  const handleSaveEdit = async (payload: { name: string }) => {
     if (!editingItem) return;
 
     setIsSavingEdit(true);
 
     try {
       const updatedProduct = await updateProduct(editingItem._id, {
-        name: payload.name,
-        description: payload.description
+        name: payload.name
       });
 
       setItems((prevItems) =>
@@ -196,6 +177,24 @@ const ShoppingListPage = () => {
         </article>
       </section>
 
+      <section className="share-panel" aria-label="שיתוף רשימה">
+        <div className="share-panel-text">
+          <h3>שיתוף הרשימה</h3>
+          <p>שלחו את הקישור כדי שאנשים נוספים יוכלו לערוך את הרשימה.</p>
+        </div>
+        <div className="share-panel-actions">
+          <input value={shareLink} readOnly aria-label="קישור שיתוף" />
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => navigator.clipboard.writeText(shareLink)}
+            disabled={!shareLink}
+          >
+            העתקת קישור
+          </button>
+        </div>
+      </section>
+
       <section className="lists-grid">
         <article className="list-block">
           <div className="list-title-row">
@@ -208,11 +207,9 @@ const ShoppingListPage = () => {
             items={remainingItems}
             onToggleBought={handleToggleBought}
             onDelete={handleDelete}
-            onPriorityChange={handlePriorityChange}
             onEdit={handleOpenEdit}
             ariaLabel="מוצרים שנותרו לקנייה"
             emptyMessage="אין מוצרים ממתינים כרגע."
-            showPriority={false}
           />
         </article>
 
@@ -222,11 +219,9 @@ const ShoppingListPage = () => {
             items={boughtItems}
             onToggleBought={handleToggleBought}
             onDelete={handleDelete}
-            onPriorityChange={handlePriorityChange}
             onEdit={handleOpenEdit}
             ariaLabel="מוצרים שנקנו"
             emptyMessage="עדיין לא סומנו מוצרים כנקנו."
-            showPriority={false}
           />
         </article>
       </section>

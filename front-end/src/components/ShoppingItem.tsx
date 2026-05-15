@@ -1,5 +1,4 @@
 // Imports
-import { type ChangeEvent } from 'react';
 import { type ShoppingItem as ShoppingItemType } from '../types/shopping.types'; 
 
 // Component props
@@ -7,39 +6,16 @@ interface ShoppingItemProps {
   item: ShoppingItemType;
   onToggleBought: (id: string) => void; // Toggle bought status
   onDelete: (id: string) => void; // Delete product
-  onPriorityChange?: (id: string, newPriority: ShoppingItemType['priority']) => void; // Change priority
   onEdit: (item: ShoppingItemType) => void;
-  showPriority?: boolean;
 }
 
 // Component declaration
-const ShoppingItem = ({ item, onToggleBought, onDelete, onPriorityChange, onEdit, showPriority = true }: ShoppingItemProps) => {
-
-  // UI helper based on item priority
-  const getPriorityBorderColor = (priority: ShoppingItemType['priority']) => {
-    switch (priority) {
-      case 'high': return 'red';
-      case 'medium': return 'orange';
-      case 'low': return 'green';
-      default: return 'gray';
-    }
-  };
-
-  const handlePrioritySelect = (event: ChangeEvent<HTMLSelectElement>) => {
-    if (!onPriorityChange) {
-      return;
-    }
-    const nextPriority = event.target.value as ShoppingItemType['priority'];
-    if (nextPriority !== item.priority) {
-      onPriorityChange(item._id, nextPriority);
-    }
-  };
+const ShoppingItem = ({ item, onToggleBought, onDelete, onEdit }: ShoppingItemProps) => {
 
   // Render
   return (
     <div 
       className="shopping-item-card" 
-      style={showPriority ? { borderInlineStart: `4px solid ${getPriorityBorderColor(item.priority)}` } : undefined}
     >
       <div className="item-header">
         <div className="item-title-wrap">
@@ -50,24 +26,7 @@ const ShoppingItem = ({ item, onToggleBought, onDelete, onPriorityChange, onEdit
           <p className="item-status">{item.bought ? 'נקנה' : 'ממתין לקנייה'}</p>
         </div>
 
-        {showPriority && (
-          <select
-            className={`priority-badge priority-picker priority-${item.priority}`}
-            value={item.priority}
-            onChange={handlePrioritySelect}
-            aria-label={`שינוי עדיפות עבור ${item.name}`}
-          >
-            <option value="low">נמוכה</option>
-            <option value="medium">בינונית</option>
-            <option value="high">גבוהה</option>
-          </select>
-        )}
       </div>
-
-      {/* Show description only when present */}
-      {item.description && (
-        <p className="item-description">{item.description}</p>
-      )}
 
       <div className="item-actions">
         <button

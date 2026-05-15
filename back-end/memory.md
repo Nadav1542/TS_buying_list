@@ -41,16 +41,12 @@
 - Request validation middleware active on POST and PATCH routes.
 
 ## Potential Bugs / Risks
-- src/controllers/product.controller.ts: createProducts has `if (!createdProducts)` check, but insertMany returns an array; this condition is effectively unnecessary and message is misleading.
-- src/controllers/product.controller.ts: getAllProducts checks `if (!products)` though `find()` returns [] when empty; this check is unnecessary.
-- Naming drift: toggleBought now updates multiple fields (not only bought). Consider renaming to updateProductById for clarity.
 - globalErrorHandler currently returns only message + optional stack; no structured validation details for field-level UI errors.
 - No explicit catch-all 404 route middleware for unknown endpoints.
 - Mongo URI is hardcoded in src/index.ts; should move to environment config for deployment safety.
 - No graceful shutdown handling for process signals / DB disconnect.
 
 ## Suggested Next Improvements
-- Remove/clean unreachable checks in createProducts/getAllProducts.
 - Standardize all controllers to catchAsync + AppError style (if any remain mixed).
 - Add not-found route middleware before globalErrorHandler.
 - Add env-based config (PORT, MONGO_URI, NODE_ENV).

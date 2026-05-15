@@ -7,15 +7,13 @@ interface ShoppingListProps {
   items: ShoppingItemType[];
   onToggleBought: (id: string) => void; // Toggle bought status
   onDelete: (id: string) => void; // Delete product
-  onPriorityChange?: (id: string, newPriority: ShoppingItemType['priority']) => void; // Change priority
   onEdit: (item: ShoppingItemType) => void;
   ariaLabel: string;
   emptyMessage: string;
-  showPriority?: boolean;
 }
 
 // Component declaration
-const ShoppingList = ({ items, onToggleBought, onDelete, onPriorityChange, onEdit, ariaLabel, emptyMessage, showPriority = true }: ShoppingListProps) => {
+const ShoppingList = ({ items, onToggleBought, onDelete, onEdit, ariaLabel, emptyMessage }: ShoppingListProps) => {
   // Render
   return (
     <section className="shopping-list" aria-label={ariaLabel}>
@@ -28,9 +26,7 @@ const ShoppingList = ({ items, onToggleBought, onDelete, onPriorityChange, onEdi
             item={item} 
             onToggleBought={onToggleBought} 
             onDelete={onDelete} 
-            onPriorityChange={onPriorityChange}
             onEdit={onEdit}
-            showPriority={showPriority}
           />
         ))
       )}

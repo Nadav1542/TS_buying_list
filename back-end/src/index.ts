@@ -1,8 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import productRoutes from './routes/products.routes.js';
+import listRoutes from './routes/lists.routes.js';
 import { globalErrorHandler } from './middleware/errorHandler.js';
+import prisma from './utils/prisma.js';
 
 // Initialize the Express application
 const app = express();
@@ -12,14 +14,14 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB using Mongoose
-const MONGO_URI = 'mongodb://localhost:27017/smart_buy_list';
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Connected to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+// Connect to MySQL using Prisma
+prisma.$connect()
+  .then(() => console.log('✅ Connected to MySQL via Prisma'))
+  .catch((err: unknown) => console.error('❌ Prisma connection error:', err));
 
 // Using products routes
 app.use('/api/products', productRoutes);
+app.use('/api/lists', listRoutes);
 
 // Centralized error handling middleware must be registered after routes.
 app.use(globalErrorHandler);
